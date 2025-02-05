@@ -31,6 +31,6 @@ jobs:
                   name: Release v${{env.version}}
                   draft: false
                   prerelease: false
-                  files: start_protected_game.exe
+                  files: bin/Release/net9.0/win-x64/publish/start_protected_game.exe
               env:
                   GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
