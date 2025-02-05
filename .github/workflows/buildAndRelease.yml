@@ -24,6 +24,9 @@ jobs:
                   echo "version=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
             - name: Build
               run: dotnet publish -r win-x64 -c Release
+            - name: Move .exe
+              shell: pwsh
+              run: Move-Item -Path .\bin\Release\net9.0\win-x64\publish\Erdtree_Launcher.exe -Destination .\start_protected_game.exe
             - name: Create Release
               uses: softprops/action-gh-release@v2
               with:
@@ -31,6 +34,6 @@ jobs:
                   name: Release v${{env.version}}
                   draft: false
                   prerelease: false
-                  files: bin/Release/net9.0/win-x64/publish/start_protected_game.exe
+                  files: start_protected_game.exe
               env:
                   GITHUB_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
