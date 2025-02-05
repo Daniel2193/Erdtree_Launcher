@@ -5,9 +5,13 @@ namespace Erdtree_Launcher
     public static class Utils
     {
         private static readonly string basePath = AppContext.BaseDirectory;
+        public static string GetVersion()
+        {
+            return Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "[AssemblyVersion not found]";
+        }
         public static string GetWindowTitle()
         {
-            return "Erdtree Launcher v" + Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "[AssemblyVersion not found]";
+            return "Erdtree Launcher v" + GetVersion();
         }
         public static bool BasegameExeExists()
         {

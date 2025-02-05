@@ -9,8 +9,12 @@ namespace Erdtree_Launcher
         private bool isDownloading = false;
         public static readonly string text_yes = "✅";
         public static readonly string text_no = "❌";
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+        public static ModManager instance;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public ModManager()
         {
+            instance = this;
             InitializeComponent();
         }
 
@@ -224,7 +228,7 @@ namespace Erdtree_Launcher
             }
         }
 
-        private async Task DownloadFile(string url, string outputPath)
+        public async Task DownloadFile(string url, string outputPath)
         {
             using var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();

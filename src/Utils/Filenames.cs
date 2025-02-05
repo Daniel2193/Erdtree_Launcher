@@ -3,10 +3,11 @@
     public static class Filenames
     {
         public static readonly string BasegameExe = "eldenring.exe";
+        public static readonly string LauncherExe = "start_protected_game.exe";
+        public static readonly string LauncherSig = "update.sig";
         public static readonly string SeamlessExe = "ersc_launcher.exe";
         public static readonly string SeamlessDll = "ersc.dll";
         public static readonly string SeamlessConfig = "ersc_settings.ini";
-        //public static readonly string SeamlessLegacy = "";
         public static readonly string EacExe = "start_protected_game_original.exe";
         public static readonly string EldenModLoaderDll = "dinput8.dll";
         public static readonly string EldenModLoaderDllDisabled = "dinput8";
@@ -41,6 +42,9 @@
         public static readonly string SeamlessDownload = "https://github.com/LukeYui/EldenRingSeamlessCoopRelease/releases/latest/download/ersc.zip";
         public static readonly string EldenModLoaderDownload = "https://github.com/techiew/EldenRingModLoader/releases/latest/download/EldenModLoader.zip";
         public static readonly string ModEngine2Download = "https://github.com/soulsmods/ModEngine2/releases/download/release-2.1.0/ModEngine-2.1.0.0-win64.zip";
+        public static readonly string LauncherUpdate = "https://github.com/Daniel2193/Erdtree_Launcher/releases/latest";
+        public static readonly string LauncherDownload = $"{LauncherUpdate}/download/start_protected_game.exe";
+        public static readonly string LauncherSignature = $"{LauncherUpdate}/download/update.sig";
         public static string GetDownloadUrl(ModLoaderType type)
         {
             return type switch
@@ -51,7 +55,5 @@
                 _ => "",
             };
         }
-        public static readonly string LauncherUpdateDownload = "";
-        public static readonly string LauncherUpdateSignature = "";
     }
 }
