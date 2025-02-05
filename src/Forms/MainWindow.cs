@@ -411,13 +411,13 @@ namespace Erdtree_Launcher
 
         private async void BtnUpdate_Click(object sender, EventArgs e)
         {
-            // if(await Updater.IsUpdateAvailable()){
-            //     var res = MessageBox.Show("An update is available, do you want to install it?", "Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            //     if(res == DialogResult.Yes){
-            //         DisableUI();
-            //         await Updater.DownloadAndInstallUpdate();
-            //     }
-            // }
+            if(await Updater.IsUpdateAvailable()){
+                var res = MessageBox.Show("An update is available, do you want to install it?", "Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if(res == DialogResult.Yes){
+                    DisableUI();
+                    await Updater.DownloadAndInstallUpdate();
+                }
+            }
         }
 
         private void DisableUI(){

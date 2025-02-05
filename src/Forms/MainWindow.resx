@@ -509,7 +509,7 @@
     <value>1</value>
   </data>
   <data name="btnUpdate.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
+    <value>True</value>
   </data>
   <data name="btnUpdate.Location" type="System.Drawing.Point, System.Drawing">
     <value>478, 221</value>
