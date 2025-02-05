@@ -174,12 +174,13 @@ namespace Erdtree_Launcher
                             foreach (var extractedFile in extractedFiles)
                             {
                                 string extractedFilename = Path.GetFileName(extractedFile);
-                                if(Filenames.IgnoredFilenames.Contains(extractedFilename)){
+                                if (Filenames.IgnoredFilenames.Contains(extractedFilename))
+                                {
                                     continue;
                                 }
                                 if (type == ModType.ModEngine2_Ext_Dll)
                                 {
-                                    targetPath = Utils.GetFullPath(Foldernames.ModEngine2Base, Foldernames.ModEngine2ExtDlls,  extractedFilename);
+                                    targetPath = Utils.GetFullPath(Foldernames.ModEngine2Base, Foldernames.ModEngine2ExtDlls, extractedFilename);
                                 }
                                 else if (type == ModType.EldenModLoader)
                                 {
@@ -187,7 +188,7 @@ namespace Erdtree_Launcher
                                 }
                                 if (File.Exists(targetPath))
                                 {
-                                    if(Filenames.ProtectedFilenames.Contains(extractedFilename))
+                                    if (Filenames.ProtectedFilenames.Contains(extractedFilename))
                                     {
                                         continue;
                                     }
@@ -325,7 +326,7 @@ namespace Erdtree_Launcher
                 }
                 else if (type == ModLoaderType.Seamless)
                 {
-
+                    Utils.CopyDirectory(tmpPath, Utils.GetFullPath(""), true);
                 }
             }
             catch (Exception ex)
@@ -336,7 +337,12 @@ namespace Erdtree_Launcher
             }
             ResetDownloadState();
             ReloadUi();
-            MessageBox.Show($"Successfully installed {name}", "Install successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (Validation.GetInstalledState(type))
+            {
+                MessageBox.Show($"Successfully installed {name}", "Install successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }else{
+                MessageBox.Show("Something went wrong", "Install Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         public static string GetModLoaderName(ModLoaderType type)
         {
