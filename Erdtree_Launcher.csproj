@@ -10,6 +10,10 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>Erdtree_Launcher.Program</StartupObject>
+    <Title>Erdtree Launcher</Title>
+    <PackageProjectUrl>https://github.com/Daniel2193/Erdtree_Launcher</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Daniel2193/Erdtree_Launcher</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
