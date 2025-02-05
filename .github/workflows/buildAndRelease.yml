@@ -19,13 +19,11 @@ jobs:
               run: dotnet publish -r win-x64 -c Release -o output_dir
             - name: Get Version
               id: get_version
-              # run: |
-              #   $ver = $(cat Erdtree_Launcher.csproj | grep -oP '<AssemblyVersion>.*</AssemblyVersion>' | grep -oP '\d+\.\d+\.\d+')
-              #   echo "$ver=$version" >> $GITHUB_ENV
+              shell: pwsh
               run: |
-                  VERSION=$(grep -oPm1 '(?<=<AssemblyVersion>)[^<]+' **/*.csproj)
-                  echo "Version extracted: $VERSION"
-                  echo "version=$VERSION" >> $GITHUB_ENV
+                  $version = Select-String -Path (Get-ChildItem -Path **/*.csproj) -Pattern '<AssemblyVersion>(.*?)</AssemblyVersion>' | ForEach-Object { $_.Matches.Groups[1].Value }
+                  echo "Version extracted: $version"
+                  echo "version=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
             - name: Create Release
               uses: softprops/action-gh-release@v2
               with:
