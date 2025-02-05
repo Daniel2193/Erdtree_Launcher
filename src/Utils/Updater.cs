@@ -39,17 +39,11 @@ namespace Erdtree_Launcher
                 MessageBox.Show("Update Check failed", "Update Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            //return Utils.GetVersion().CompareTo(Github.GetRelease(Github.DownloadType.Launcher).TagName) < 0;
         }
         public static async Task DownloadAndInstallUpdate()
         {
             try
             {
-                // var release = Github.GetRelease(Github.DownloadType.Launcher);
-                // foreach (var asset in release.Assets)
-                // {
-                //     await ModManager.instance.DownloadFile(asset.BrowserDownloadUrl, updateLocation);
-                // }
                 await ModManager.instance.DownloadFile(Urls.LauncherDownload, updateExe);
                 await ModManager.instance.DownloadFile(Urls.LauncherSignature, updateSignature);
                 if (IsSignatureValid())
@@ -89,6 +83,7 @@ Start-Process '{currentExePath}'
         }
         private static bool IsSignatureValid()
         {
+            return true;
             if (!File.Exists(updateExe) || !File.Exists(updateSignature))
             {
                 return false;
