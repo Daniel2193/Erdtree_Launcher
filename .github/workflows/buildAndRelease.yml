@@ -1,0 +1,38 @@
+name: Build and Release
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build-and-release:
+        runs-on: windows-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: 9.x
+            - name: Build
+              run: dotnet publish -r win-x64 -c Release -o output_dir
+            - name: Get Version
+              id: get_version
+              # run: |
+              #   $ver = $(cat Erdtree_Launcher.csproj | grep -oP '<AssemblyVersion>.*</AssemblyVersion>' | grep -oP '\d+\.\d+\.\d+')
+              #   echo "$ver=$version" >> $GITHUB_ENV
+              run: |
+                  VERSION=$(grep -oPm1 '(?<=<AssemblyVersion>)[^<]+' **/*.csproj)
+                  echo "Version extracted: $VERSION"
+                  echo "version=$VERSION" >> $GITHUB_ENV
+            - name: Create Release
+              uses: softprops/action-gh-release
+              with:
+                  tag_name: v${{env.version}}
+                  name: Release v${{env.version}}
+                  draft: false
+                  prerelease: false
+                  files: output_dir/*.exe
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
