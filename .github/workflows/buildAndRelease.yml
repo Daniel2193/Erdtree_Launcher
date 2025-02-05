@@ -27,7 +27,7 @@ jobs:
                   echo "Version extracted: $VERSION"
                   echo "version=$VERSION" >> $GITHUB_ENV
             - name: Create Release
-              uses: softprops/action-gh-release
+              uses: softprops/action-gh-release@v2
               with:
                   tag_name: v${{env.version}}
                   name: Release v${{env.version}}
