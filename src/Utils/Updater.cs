@@ -72,10 +72,6 @@ namespace Erdtree_Launcher
             {
                 currentExePath = mainModule.FileName;
             }
-            //TODO - Remove
-            currentExePath = Utils.GetFullPath(Filenames.LauncherExe);
-            MessageBox.Show(currentExePath);
-            //
             string tempScript = Path.GetTempFileName() + ".ps1";
 
             string scriptContent = $@"
