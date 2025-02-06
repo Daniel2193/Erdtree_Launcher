@@ -27,7 +27,7 @@ jobs:
             - name: Move .exe
               shell: pwsh
               run: |
-                Get-ChildItem -Path .\bin\Release\net9.0\win-x64\publish\
+                Get-ChildItem -Path .
                 Move-Item -Path .\bin\Release\net9.0\win-x64\publish\Erdtree_Launcher.exe -Destination .\start_protected_game.exe
             - name: Create Release
               uses: softprops/action-gh-release@v2
