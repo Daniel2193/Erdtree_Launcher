@@ -416,6 +416,7 @@ namespace Erdtree_Launcher
                 if(res == DialogResult.Yes){
                     DisableUI();
                     await Updater.DownloadAndInstallUpdate();
+                    EnableUI();
                 }
             }
         }

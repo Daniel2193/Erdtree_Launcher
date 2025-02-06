@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
-    <AssemblyVersion>1.0.2</AssemblyVersion>
+    <AssemblyVersion>1.0.3</AssemblyVersion>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <TargetFramework>net9.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
@@ -17,7 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Octokit" Version="13.0.1" />
     <PackageReference Include="Tomlyn" Version="0.17.0" />
   </ItemGroup>
 

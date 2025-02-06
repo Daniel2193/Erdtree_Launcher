@@ -24,7 +24,7 @@ jobs:
                   echo "version=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
             - name: Build
               run: dotnet publish -r win-x64 -c Release
-            - name: Move .exe
+            - name: Move/Rename .exe
               shell: pwsh
               run: Move-Item -Path .\bin\Release\net9.0-windows\win-x64\publish\Erdtree_Launcher.exe -Destination .\start_protected_game.exe
             - name: Create Release

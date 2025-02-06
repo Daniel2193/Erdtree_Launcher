@@ -44,8 +44,11 @@ namespace Erdtree_Launcher
         {
             try
             {
+                if(!Directory.Exists(updateLocation)){
+                    Directory.CreateDirectory(updateLocation);
+                }
                 await ModManager.instance.DownloadFile(Urls.LauncherDownload, updateExe);
-                await ModManager.instance.DownloadFile(Urls.LauncherSignature, updateSignature);
+                //await ModManager.instance.DownloadFile(Urls.LauncherSignature, updateSignature);
                 if (IsSignatureValid())
                 {
                     ReplaceSelf(updateExe);
@@ -59,11 +62,24 @@ namespace Erdtree_Launcher
         }
         private static void ReplaceSelf(string newExePath)
         {
-            string currentExePath = Process.GetCurrentProcess().MainModule.FileName;
+            var mainModule = Process.GetCurrentProcess().MainModule;
+            string currentExePath;
+            if (mainModule == null)
+            {
+                currentExePath = Utils.GetFullPath(Filenames.LauncherExe);
+            }
+            else
+            {
+                currentExePath = mainModule.FileName;
+            }
+            //TODO - Remove
+            currentExePath = Utils.GetFullPath(Filenames.LauncherExe);
+            MessageBox.Show(currentExePath);
+            //
             string tempScript = Path.GetTempFileName() + ".ps1";
 
             string scriptContent = $@"
-Start-Sleep -Seconds 1
+Start-Sleep -Seconds 3
 Remove-Item '{currentExePath}' -Force
 Move-Item '{newExePath}' '{currentExePath}' -Force
 Start-Process '{currentExePath}'
@@ -76,7 +92,7 @@ Start-Process '{currentExePath}'
                 FileName = "powershell.exe",
                 Arguments = $"-NoProfile -ExecutionPolicy Bypass -File \"{tempScript}\"",
                 WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true
+                CreateNoWindow = false
             };
 
             Process.Start(psi);
