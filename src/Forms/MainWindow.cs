@@ -414,14 +414,14 @@ namespace Erdtree_Launcher
             if(await Updater.IsUpdateAvailable()){
                 var res = MessageBox.Show("An update is available, do you want to install it?", "Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if(res == DialogResult.Yes){
-                    DisableUI();
+                    DisableUI(true);
                     await Updater.DownloadAndInstallUpdate();
                     EnableUI();
                 }
             }
         }
 
-        private void DisableUI(){
+        private void DisableUI(bool update = false){
             btnVanillaOffline.Enabled = false;
             btnVanillaOnline.Enabled = false;
             btnModded.Enabled = false;
@@ -429,6 +429,9 @@ namespace Erdtree_Launcher
             btnUpdate.Enabled = false;
             listModsEnabled.Enabled = false;
             listModsDisabled.Enabled = false;
+            if(update){
+                btnQuit.Enabled = false;
+            }
         }
 
         private void EnableUI(){
@@ -439,6 +442,7 @@ namespace Erdtree_Launcher
             btnUpdate.Enabled = true;
             listModsEnabled.Enabled = true;
             listModsDisabled.Enabled = true;
+            btnQuit.Enabled = true;
         }
     }
 
