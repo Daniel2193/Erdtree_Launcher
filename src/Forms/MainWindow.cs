@@ -169,6 +169,12 @@ namespace Erdtree_Launcher
         private void LaunchGame(LaunchType type)
         {
             Utils.EnsureBasegameExeExistsOrQuit();
+            if(type == LaunchType.VanillaOnline){
+                if(!LaunchVanillaOnline()){
+                    EnableUI();
+                    return;
+                }
+            }
             bool useEldenModLoader = type == LaunchType.ModdedForceEldenModLoader || type == LaunchType.ModdedForceBoth || (type == LaunchType.Modded && AvailableMods.Any(mod => mod.enabled && mod.modType == ModType.EldenModLoader));
             bool useModEngine2 = type == LaunchType.ModdedForceModEngine2 || type == LaunchType.ModdedForceBoth || type == LaunchType.Seamless || (type == LaunchType.Modded && AvailableMods.Any(mod => mod.enabled && (mod.modType == ModType.ModEngine2_Folder || mod.modType == ModType.ModEngine2_Ext_Dll || mod.modType == ModType.ModEngine2_Seamless)));
             if (useEldenModLoader)
@@ -246,6 +252,19 @@ namespace Erdtree_Launcher
             try
             {
                 using Process p = Process.Start(Utils.GetFullPath(Filenames.BasegameExe), online ? "" : "-eac-nop-loaded");
+                p.Dispose();
+                return true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Failed to launch the Game\n\n" + e.Message, "Launch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+        private static bool LaunchVanillaOnline(bool online = false){
+            try
+            {
+                using Process p = Process.Start(Utils.GetFullPath(Filenames.EacExe));
                 p.Dispose();
                 return true;
             }
