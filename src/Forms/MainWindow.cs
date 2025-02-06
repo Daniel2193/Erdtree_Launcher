@@ -117,15 +117,17 @@ namespace Erdtree_Launcher
             }
         }
 
-        public static void DisabledEldenModLoader()
+        public static bool DisabledEldenModLoader()
         {
             try
             {
                 File.Move(Utils.GetFullPath(Filenames.EldenModLoaderDll), Utils.GetFullPath(Filenames.EldenModLoaderDllDisabled));
+                return true;
             }
             catch (Exception e)
             {
                 MessageBox.Show($"Unable to disable Elden Mod Loader\nYou should manually rename \"{Filenames.EldenModLoaderDll}\" to \"{Filenames.EldenModLoaderDllDisabled}\"\n\n{e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
 
@@ -170,6 +172,10 @@ namespace Erdtree_Launcher
         {
             Utils.EnsureBasegameExeExistsOrQuit();
             if(type == LaunchType.VanillaOnline){
+                if(!DisabledEldenModLoader()){
+                    EnableUI();
+                    return;
+                }
                 if(!LaunchVanillaOnline()){
                     EnableUI();
                     return;
