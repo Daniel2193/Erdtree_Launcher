@@ -26,7 +26,9 @@ jobs:
               run: dotnet publish -r win-x64 -c Release
             - name: Move .exe
               shell: pwsh
-              run: Move-Item -Path .\bin\Release\net9.0\win-x64\publish\Erdtree_Launcher.exe -Destination .\start_protected_game.exe
+              run: |
+                Get-ChildItem -Path .\bin\Release\net9.0\win-x64\publish\
+                Move-Item -Path .\bin\Release\net9.0\win-x64\publish\Erdtree_Launcher.exe -Destination .\start_protected_game.exe
             - name: Create Release
               uses: softprops/action-gh-release@v2
               with:
