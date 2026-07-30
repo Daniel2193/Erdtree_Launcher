@@ -1,0 +1,77 @@
+{
+	"$schema": "../gen/schemas/desktop-schema.json",
+	"identifier": "main",
+	"description": "Capabilities for the app window",
+	"windows": [
+		"main",
+		"secondary"
+	],
+	"permissions": [
+		"core:path:default",
+		"core:event:default",
+		"core:window:default",
+		"core:app:default",
+		"core:resources:default",
+		"core:menu:default",
+		"core:tray:default",
+		"shell:allow-open",
+		{
+			"identifier": "shell:allow-execute",
+			"allow": [
+				{
+					"name": "powershell",
+					"cmd": "powershell",
+					"args": true
+				},
+				{
+					"name": "me3",
+					"cmd": "me3",
+					"args": true
+				},
+				{
+					"name": "cmd",
+					"cmd": "cmd",
+					"args": true
+				}
+			]
+		},
+		"notification:default",
+		"os:allow-platform",
+		"os:allow-arch",
+		"os:allow-family",
+		"os:allow-version",
+		"os:allow-locale",
+		"fs:allow-document-read",
+		"fs:allow-document-write",
+		"store:default",
+		"core:webview:allow-create-webview",
+		"core:webview:allow-create-webview-window",
+		"upload:default",
+		"http:default",
+		{
+			"identifier": "http:default",
+			"allow": [
+				{
+					"url": "https://api.github.com/*"
+				},
+				{
+					"url": "https://github.com/*"
+				}
+			]
+		},
+		"fs:default",
+		{
+			"identifier": "fs:scope",
+			"allow": [
+				{
+					"path": "**/*"
+				}
+			]
+		},
+		"dialog:default",
+		"shell:default",
+		"process:default",
+		"pinia:default",
+		"fs:write-all"
+	]
+}

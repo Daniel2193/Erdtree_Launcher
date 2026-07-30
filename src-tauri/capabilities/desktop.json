@@ -1,0 +1,33 @@
+{
+	"identifier": "desktop-capability",
+	"platforms": [
+		"macOS",
+		"windows",
+		"linux"
+	],
+	"windows": [
+		"main"
+	],
+	"permissions": [
+		"updater:default",
+		"store:default",
+		"upload:default",
+		"http:default",
+		"fs:default",
+		"fs:write-all",
+		"dialog:default",
+		"shell:default",
+		{
+			"identifier": "shell:allow-execute",
+			"allow": [
+				{
+					"name": "tar",
+					"cmd": "tar",
+					"args": true
+				}
+			]
+		},
+		"process:default",
+		"pinia:default"
+	]
+}

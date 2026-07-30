@@ -1,0 +1,13 @@
+{
+	"identifier": "pinia",
+	"windows": ["*"],
+	"permissions": [
+		"pinia:default",
+		"core:event:default",
+		"upload:default",
+		"http:default",
+		"fs:default",
+		"fs:write-all",
+		"process:default"
+	]
+}
