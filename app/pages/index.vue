@@ -1,5 +1,5 @@
 <template>
-	<div v-if="settings.isBasePathSet()" class="flex justify-between py-2">
+	<div v-if="settings.isBasePathSet()" class="flex justify-between">
 		<div class="mx-auto" @contextmenu.prevent>
 			<h2 class="text-4xl mx-auto w-max">
 				Profiles

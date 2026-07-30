@@ -56,7 +56,8 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             commands::unzip,
-            commands::import_mod
+            commands::import_mod,
+			commands::auto_locate_games,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

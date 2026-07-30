@@ -3,10 +3,12 @@ use std::io::Read;
 use std::path::{Path, PathBuf};
 
 use sha2::{Digest, Sha256};
+use steamlocate::SteamDir;
 use tauri::{AppHandle, Emitter};
 use walkdir::WalkDir;
 
 use crate::consts::PROTECTED_DIR_NAMES;
+use crate::consts::STEAM_APP_IDS;
 use crate::unzip::unzip_file;
 
 use serde::{Deserialize, Serialize};
@@ -21,6 +23,16 @@ pub struct ProgressPayload {
 pub struct ModImportResult {
     path: String,
     mod_type: String,
+}
+
+#[derive(Serialize)]
+pub struct AutoLocateResult {
+    er: Option<String>,
+    ds3: Option<String>,
+    ds2: Option<String>,
+    dsr: Option<String>,
+    sekiro: Option<String>,
+    nr: Option<String>,
 }
 
 pub fn send_progress_update(app: &AppHandle, current: i64, max: i64, msg: &str) {
@@ -183,5 +195,30 @@ fn hash_directory_smart(path: &Path) -> Result<String, String> {
     hasher.update(file_count.to_le_bytes());
     hasher.update(path.to_string_lossy().as_bytes());
 
-	Ok(hex::encode(hasher.finalize()))
+    Ok(hex::encode(hasher.finalize()))
+}
+
+#[tauri::command]
+pub async fn auto_locate_games() -> Result<AutoLocateResult, Option<String>> {
+    let steam = SteamDir::locate().map_err(|error| error.to_string())?;
+
+    Ok(AutoLocateResult {
+        er: find_app_path(&steam, STEAM_APP_IDS.er)?,
+        ds3: find_app_path(&steam, STEAM_APP_IDS.ds3)?,
+        ds2: find_app_path(&steam, STEAM_APP_IDS.ds2)?,
+        dsr: find_app_path(&steam, STEAM_APP_IDS.dsr)?,
+        sekiro: find_app_path(&steam, STEAM_APP_IDS.sekiro)?,
+        nr: find_app_path(&steam, STEAM_APP_IDS.nr)?,
+    })
+}
+
+fn find_app_path(steam: &SteamDir, app_id: u32) -> Result<Option<String>, String> {
+    let Some((app, library)) = steam.find_app(app_id).map_err(|error| error.to_string())? else {
+        return Ok(None);
+    };
+    let path = library.resolve_app_dir(&app);
+    if !path.is_dir() {
+        return Ok(None);
+    }
+    Ok(Some(path.to_string_lossy().into_owned()))
 }

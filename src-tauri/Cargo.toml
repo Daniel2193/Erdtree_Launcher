@@ -1,6 +1,7 @@
+# cspell:disable
 [package]
 name = "ErdtreeLauncher"
-version = "2.2.3"
+version = "2.2.4"
 description = "FromSoft Mod Launcher / Manager"
 authors = [ "Daniel2193" ]
 license = "MIT"
@@ -37,6 +38,7 @@ walkdir = "2"
 tauri-plugin-devtools = "2"
 tauri-plugin-process = "2"
 hex = "0.4"
+steamlocate = "2"
 
 [dependencies.tauri]
 version = "2.8.5"

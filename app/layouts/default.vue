@@ -2,7 +2,7 @@
 	<div @contextmenu.prevent>
 		<SiteNavbar />
 
-		<UContainer>
+		<UContainer class="p-2">
 			<slot />
 		</UContainer>
 	</div>

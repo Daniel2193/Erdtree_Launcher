@@ -1,4 +1,6 @@
+import type { Toast } from '@nuxt/ui/runtime/composables/useToast.js'
 import type { GameType } from '~/types/main.types'
+import { invoke } from '@tauri-apps/api/core'
 import { defineStore } from 'pinia'
 
 type FolderType = 'base' | 'game' | 'launcherBase'
@@ -69,34 +71,8 @@ export const useSettingsStore = defineStore('settings', () => {
 		}
 		throw new Error('Invalid folder type')
 	}
-
-	// function getPath(folder: FolderType, game: GameType = currentGame.value) {
-	// 	const basePath = baseDirs.value[game]
-	// 	if (folder === 'base') {
-	// 		return basePath
-	// 	}
-	// 	else if (folder === 'game') {
-	// 		return basePath ? `${basePath}${DIRECT_PATH_GAMES.has(game) ? '' : 'Game'}` : ''
-	// 	}
-	// 	else if (folder === 'launcherBase') {
-	// 		return basePath ? `${basePath}ErdtreeLauncher` : ''
-	// 	}
-	// 	else {
-	// 		if (game === 'er') {
-
-	// 		}
-	// 		else if (game === 'ds3') {
-
-	// 		}
-	// 		else {
-	// 			return ''
-	// 		}
-	// 	}
-	// 	throw new Error('Invalid path')
-	// }
-
 	function setBasePath(path: string, game: GameType) {
-		baseDirs.value[game] = path
+		baseDirs.value[game] = path.endsWith('\\') ? path : `${path}\\`
 	}
 	function setModpackPath(path: string, game: GameType, modpackId: string) {
 		modpackDirs.value[game][modpackId] = path

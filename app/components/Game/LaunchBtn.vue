@@ -52,15 +52,22 @@ async function handleLaunch() {
 	if (isGameRunning.value) {
 		return
 	}
-	const error = await launchGame(launchMode.value)
-	if (error) {
-		toast.add({
-			title: 'Cannot launch profile',
-			icon: 'lucide:clipboard-x',
-			color: 'error',
-			...error,
-		})
+	isGameRunning.value = true
+	try {
+		const error = await launchGame(launchMode.value)
+		if (error) {
+			toast.add({
+				title: 'Cannot launch profile',
+				icon: 'lucide:clipboard-x',
+				color: 'error',
+				...error,
+			})
+		}
 	}
+	catch (e) {
+		console.error(e)
+	}
+
 	isGameRunning.value = false
 }
 </script>
