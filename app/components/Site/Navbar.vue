@@ -56,7 +56,7 @@ try {
 	const update = await check()
 	if (update) {
 		console.log(`Update available: ${update.version} released ${update.date}`)
-		update.downloadAndInstall((event) => {
+		await update.downloadAndInstall((event) => {
 			switch (event.event) {
 			case 'Started':
 				contentLength.value = event.data.contentLength ?? 0
