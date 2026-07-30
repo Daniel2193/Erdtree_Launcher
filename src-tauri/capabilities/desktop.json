@@ -28,6 +28,7 @@
 			]
 		},
 		"process:default",
-		"pinia:default"
+		"pinia:default",
+		"core:window:allow-minimize"
 	]
 }
