@@ -54,4 +54,4 @@ tauri-plugin-single-instance = "2"
 tauri-plugin-updater = "2"
 
 [patch.crates-io]
-tauri = { path = "../../tauri/crates/tauri" }
+tauri = { git = "https://github.com/Daniel2193/tauri.git", rev = "ad3d872f25acaaf24201ec3bedaf2b7949a5c4f1" }
