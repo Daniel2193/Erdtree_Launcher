@@ -32,22 +32,25 @@ export const LAUNCH_MODE = {
 	RUN_WITHOUT_BUILDING: 3,
 } as const
 
-export const VANILLA_PROFILES: ModProfile[] = [
-	{
+export function getVanillaProfiles(game: GameType) {
+	const results: ModProfile[] = [{
 		name: 'Vanilla Online',
 		id: PROFILE_IDS.VANILLA_ONLINE,
 		mod_ids: [],
 		savefile: '',
 		locked: true,
-	},
-	{
-		name: 'Vanilla Offline',
-		id: PROFILE_IDS.VANILLA_OFFLINE,
-		mod_ids: [],
-		savefile: '',
-		locked: true,
-	},
-] as const
+	}]
+	if (getAllModLoaders(game).some(m => m.id === 'ME3')) {
+		results.push({
+			name: 'Vanilla Offline',
+			id: PROFILE_IDS.VANILLA_OFFLINE,
+			mod_ids: [],
+			savefile: '',
+			locked: true,
+		})
+	}
+	return results
+}
 
 const SEAMLESS_SAVEFILES: Record<GameType, string> = {
 	er: 'ER0000.co2',

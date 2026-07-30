@@ -1,6 +1,6 @@
-import type { GameType, Mod, Modpack, ModpackProfile, ModProfile, ModType } from '~/types/main.types'
-import { exists, readFile, readTextFile } from '@tauri-apps/plugin-fs'
-import { DIRECT_PATH_GAMES, getSeamlessProfile, VANILLA_PROFILES } from '~/utils/consts'
+import type { GameType, Mod, Modpack, ModProfile, ModType } from '~/types/main.types'
+import { exists, readTextFile } from '@tauri-apps/plugin-fs'
+import { DIRECT_PATH_GAMES, getSeamlessProfile, getVanillaProfiles } from '~/utils/consts'
 import { useSettingsStore } from './settings.store'
 
 const gameStoreDefinitions = new Map<GameType, ReturnType<typeof getStore>>()
@@ -19,16 +19,17 @@ export function useGameStore(game: GameType) {
 	return getGameStoreDefinition(game)()
 }
 
+const filename: Record<GameType, string> = {
+	er: 'ersc.dll',
+	ds3: 'ds3sc.dll',
+	ds2: 'ds2sc.dll',
+	dsr: 'ds1sc.dll',
+	nr: 'nrsc.dll',
+	sekiro: 'sekirosc.dll',
+}
+
 function getSeamlessPath(game: GameType) {
 	const base = `../../../${DIRECT_PATH_GAMES.has(game) ? '' : 'Game/'}SeamlessCoop/`
-	const filename: Record<GameType, string> = {
-		er: 'ersc.dll',
-		ds3: 'ds3sc.dll',
-		ds2: 'ds2sc.dll',
-		dsr: 'ds1sc.dll',
-		nr: 'nrsc.dll',
-		sekiro: 'sekirosc.dll',
-	}
 	return `${base}${filename[game]}`
 }
 
@@ -37,7 +38,7 @@ function getStore(game: GameType) {
 		const selectedProfileId = ref<string>(PROFILE_IDS.VANILLA_OFFLINE)
 
 		const baseProfiles = computedAsync(async () => [
-			...VANILLA_PROFILES,
+			...getVanillaProfiles(game),
 			await getSeamlessProfile(game),
 		])
 

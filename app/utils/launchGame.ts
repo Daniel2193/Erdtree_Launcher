@@ -1,6 +1,5 @@
 import type { Toast } from '@nuxt/ui/runtime/composables/useToast.js'
 import type { Me2Profile, Me3Profile } from '~/types/main.types'
-import { join } from '@tauri-apps/api/path'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import { exists, mkdir, rename, writeTextFile } from '@tauri-apps/plugin-fs'
 import { Command } from '@tauri-apps/plugin-shell'
@@ -27,13 +26,16 @@ export async function launchGame(launchMode: number = LAUNCH_MODE.NORMAL): Promi
 		return await launchSeamless()
 	}
 	else if (store.value.selectedProfileId === PROFILE_IDS.VANILLA_OFFLINE) {
+		thisWindow.minimize()
 		await launchVanilla()
 	}
 	else if (store.value.selectedProfileId === PROFILE_IDS.VANILLA_ONLINE) {
+		thisWindow.minimize()
 		await launchVanilla(true)
 	}
 	else if (allModTypes.every(type => type === 'EXTERNAL') && allModTypes.length > 0 && store.value.selectedProfile?.launchConfigId) {
 		console.log('Launching Modpack', modsToLoad[0]!.id)
+		thisWindow.minimize()
 		await launchExternal(store.value.selectedProfile.launchConfigId)
 	}
 	else if (allModTypes.some(t => t === 'ME_DIR' || t === 'ME_DLL')) {
@@ -48,6 +50,7 @@ export async function launchGame(launchMode: number = LAUNCH_MODE.NORMAL): Promi
 					description: 'ModEngine3 not found. Make sure its installed in the \'Mods\' tab',
 				}
 			}
+			thisWindow.minimize()
 			return await launchMe2(launchMode)
 		}
 		if (!await isMe3Installed(game)) {
@@ -63,7 +66,8 @@ export async function launchGame(launchMode: number = LAUNCH_MODE.NORMAL): Promi
 		if (launchMode === LAUNCH_MODE.NORMAL) {
 			thisWindow.minimize()
 		}
-		return await launchMe3(launchMode)
+		thisWindow.minimize()
+		return await launchMe3({ launchMode })
 	}
 	else {
 		console.error('Unknown launch config')
@@ -128,7 +132,13 @@ async function buildMe2Profile() {
 	console.log('Wrote ME2 Profile to: ', `${profilesPath}/${profileFilename}.toml`)
 }
 
-async function launchMe3(launchMode: number, profilePathOverride?: string) {
+interface Me3LaunchParams {
+	launchMode: number
+	profilePathOverride?: string
+	noProfile?: boolean
+}
+
+async function launchMe3({ launchMode, noProfile, profilePathOverride }: Me3LaunchParams) {
 	if (launchMode !== LAUNCH_MODE.RUN_WITHOUT_BUILDING) {
 		await buildMe3Profile()
 	}
@@ -140,8 +150,8 @@ async function launchMe3(launchMode: number, profilePathOverride?: string) {
 	const settings = useSettingsStore()
 	const launcherPath = settings.getPath({ folder: 'launcherBase' })
 	const profilePath = profilePathOverride ?? `${launcherPath}/ME3/profiles/${profileFilename}`
-	const process = Command.create('powershell', ['-NoProfile', '-Command', `& "${launcherPath}${getModLoader(settings.currentGame, 'ME3').binPath}" launch -p "${profilePath}"`])
-
+	const profileArgs = noProfile ? `-g ${settings.currentGame}` : `-p "${profilePath}"`
+	const process = Command.create('powershell', ['-NoProfile', '-Command', `& "${launcherPath}${getModLoader(settings.currentGame, 'ME3').binPath}" launch ${profileArgs}`])
 	await process.execute()
 }
 
@@ -193,10 +203,7 @@ async function launchExternal(launchConfigId: string) {
 		await process.execute()
 	}
 	else if (launchConfig.me3ProfilePath) {
-		await launchMe3(
-			LAUNCH_MODE.RUN_WITHOUT_BUILDING,
-			`${modpackPath}${launchConfig.me3ProfilePath}`,
-		)
+		await launchMe3({ launchMode: LAUNCH_MODE.RUN_WITHOUT_BUILDING, profilePathOverride: `${modpackPath}${launchConfig.me3ProfilePath}` })
 	}
 	else if (launchConfig.me2ProfilePath) {
 		await launchMe2(
@@ -216,10 +223,18 @@ async function launchVanilla(online?: boolean) {
 		console.error('Vanilla Safety Check failed')
 		return
 	}
-	const process = Command.create('powershell', ['-NoProfile', '-Command', String.raw`& .\eldenring.exe ${online ? '' : '-eac-nop-loaded'}`.trim()], {
-		cwd: settings.getPath({ folder: 'game' }),
-	})
-	process.execute()
+	if (online) {
+		const process = Command.create('powershell', ['-NoProfile', '-Command', `& .\\${EXE_FILENAME[settings.currentGame]}.exe`.trim()], {
+			cwd: settings.getPath({ folder: 'game' }),
+		})
+		await process.execute()
+	}
+	else if (getAllModLoaders(settings.currentGame).some(m => m.id === 'ME3')) {
+		await launchMe3({ launchMode: LAUNCH_MODE.RUN_WITHOUT_BUILDING, noProfile: true })
+	}
+	else {
+		console.error('Not yet supported')
+	}
 }
 
 async function launchSeamless() {
@@ -227,15 +242,7 @@ async function launchSeamless() {
 	const process = Command.create('powershell', ['-NoProfile', '-Command', `& .\\${getModLoader(settings.currentGame, 'SEAMLESS').binPath}`], {
 		cwd: settings.getPath({ folder: 'game' }),
 	})
-
-	process.stdout.on('data', console.log)
-	process.stderr.on('data', console.error)
-	const result = await process.execute()
-	console.log(result.code)
-	console.log(result.stdout)
-	console.error(result.stderr)
-
-	// await process.execute()
+	await process.execute()
 }
 
 async function vanillaSafetyCheck() {
@@ -250,4 +257,11 @@ async function vanillaSafetyCheck() {
 	catch {
 		return false
 	}
+}
+
+async function _debugProcess(process: Command<string>) {
+	const result = await process.execute()
+	console.log(result.code)
+	console.log(result.stdout)
+	console.error(result.stderr)
 }

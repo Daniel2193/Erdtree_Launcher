@@ -1,5 +1,5 @@
 import type { Pinia } from 'pinia'
-import { createPlugin, TauriPluginPinia } from '@tauri-store/pinia'
+import { createPlugin } from '@tauri-store/pinia'
 
 export default defineNuxtPlugin((nuxtApp) => {
 	(nuxtApp.$pinia as Pinia).use(createPlugin({

@@ -5,7 +5,7 @@
 				Profiles
 			</h2>
 			<div class="my-8">
-				<URadioGroup v-model="store.selectedProfileId" :items="profiles" variant="card" :ui="{ fieldset: 'grid grid-cols-2 gap-4' }">
+				<URadioGroup v-model="store.selectedProfileId" :items="profiles" variant="card" :ui="uiClasses">
 					<template #label="{ item }">
 						<div class="flex justify-between">
 							<h4>{{ item.label }}</h4>
@@ -71,6 +71,8 @@ const profiles = computed(() =>
 		return !modpackProfile || modpackStates.value?.installed[modpackProfile.modpackId!] === true
 	}),
 )
+
+const uiClasses = computed(() => profiles.value.length > 6 ? { fieldset: 'grid grid-cols-2 gap-4' } : undefined)
 
 async function handleLocateModpack(modpackId: string) {
 	const path = await open({
