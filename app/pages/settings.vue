@@ -4,7 +4,7 @@
 			Settings
 		</h2>
 		<div class="w-max mx-auto my-4">
-			<UButton label="Auto detect all" @click="autoLocateGames" />
+			<UButton label="Auto detect all" color="secondary" @click="autoLocateGames" />
 		</div>
 		<div v-for="(label, game) in GAME_LABELS" :key="game" class="my-2">
 			<div class="flex justify-between my-8">
