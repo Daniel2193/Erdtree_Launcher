@@ -5,14 +5,11 @@
 			<GameLaunchBtn />
 		</template>
 		<UNavigationMenu
-			:items="pages" variant="link" :ui="{
+			:items="all" variant="link" :ui="{
 				viewportWrapper: 'w-2xl absolute-center-h',
 				list: 'gap-x-3'
 			}"
 		/>
-		<template #body>
-			<UNavigationMenu :items="pages" orientation="vertical" variant="link" />
-		</template>
 		<template #right>
 			<UBadge variant="subtle" class="mx-2">
 				v{{ version }}
@@ -27,26 +24,10 @@ import { relaunch } from '@tauri-apps/plugin-process'
 import { check } from '@tauri-apps/plugin-updater'
 
 const settings = useSettingsStore()
-
+const routes = useRouter().getRoutes()
 const items = ref(Object.entries(GAME_LABELS).map(([game, label]) => ({ value: game, label })))
 
-const pages = [
-	{
-		label: 'Profiles',
-		icon: 'lucide:clipboard',
-		to: '/',
-	},
-	{
-		label: 'Mods',
-		icon: 'lucide:circuit-board',
-		to: '/mods',
-	},
-	{
-		label: 'Settings',
-		icon: 'lucide:settings',
-		to: '/settings',
-	},
-]
+const all = routes.sort((a, b) => (a.meta.position as number | undefined ?? -1) - (b.meta.position as number | undefined ?? -1)).map(r => ({ label: r.name as string, icon: r.meta.icon as string, to: r.path }))
 
 const version = await useTauriAppGetVersion()
 
