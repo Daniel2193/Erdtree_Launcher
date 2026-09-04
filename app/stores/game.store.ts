@@ -19,7 +19,7 @@ export function useGameStore(game: GameType) {
 	return getGameStoreDefinition(game)()
 }
 
-const filename: Record<GameType, string> = {
+const SEAMLESS_DLL_FILENAME: Record<GameType, string> = {
 	er: 'ersc.dll',
 	ds3: 'ds3sc.dll',
 	ds2: 'ds2sc.dll',
@@ -30,7 +30,7 @@ const filename: Record<GameType, string> = {
 
 function getSeamlessPath(game: GameType) {
 	const base = `../../../${DIRECT_PATH_GAMES.has(game) ? '' : 'Game/'}SeamlessCoop/`
-	return `${base}${filename[game]}`
+	return `${base}${SEAMLESS_DLL_FILENAME[game]}`
 }
 
 function getStore(game: GameType) {

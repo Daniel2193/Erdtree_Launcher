@@ -42,3 +42,11 @@ export function me3ProfileToToml(profile: Me3Profile) {
 	}
 	return output.trim()
 }
+
+export function joinPath(...parts: string[]) {
+	const separator = '\\'
+	return parts
+		.filter(Boolean)
+		.join(separator)
+		.replace(/[\\/]+/g, separator)
+}

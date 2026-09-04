@@ -105,3 +105,8 @@ export interface Me2Profile {
 export type GameType = 'er' | 'ds3' | 'ds2' | 'dsr' | 'sekiro' | 'nr'
 
 export type ProgressHandlerType = (data: { progressTotal: number, total: number }) => void
+
+export interface SelectItem {
+	value: string
+	label: string
+}

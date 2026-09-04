@@ -1,14 +1,13 @@
 <template>
-	<div v-if="settings.isBasePathSet()" class="flex justify-between">
-		<div class="mx-auto" @contextmenu.prevent>
-			<h2 class="text-4xl mx-auto w-max">
-				Profiles
-			</h2>
+	<div class="flex justify-between w-max mx-auto">
+		<div>
 			<div class="my-8">
 				<URadioGroup v-model="store.selectedProfileId" :items="profiles" variant="card" :ui="uiClasses">
 					<template #label="{ item }">
 						<div class="flex justify-between">
-							<h4>{{ item.label }}</h4>
+							<h4 class="mr-4">
+								{{ item.label }}
+							</h4>
 							<EditorProfile
 								v-if="!store.availableProfiles.find(p => p.id === item.value)?.locked"
 								:prev="store.availableProfiles.find(p => p.id === item.value)"
@@ -22,7 +21,6 @@
 			</div>
 		</div>
 	</div>
-	<SiteSettingsLink v-else />
 </template>
 
 <script setup lang="ts">

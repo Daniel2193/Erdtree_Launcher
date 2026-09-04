@@ -4,7 +4,7 @@
 
 		<UContainer v-if="settings.isBasePathSet()" class="p-2" @contextmenu.prevent>
 			<h2 class="mx-auto text-6xl w-max">
-				{{ route.meta.name }}
+				{{ route.name }}
 			</h2>
 			<div>
 				<slot />

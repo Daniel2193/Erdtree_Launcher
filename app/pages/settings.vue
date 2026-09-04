@@ -10,7 +10,7 @@
 					@click="toggleOpenState(game)"
 				/>
 				<span class="text-xl font-bold mr-2 my-auto">{{ label }} Path:</span>
-				<span class="my-auto">{{ settings.getPath({ game, folder: 'game' }) }}</span>
+				<span class="my-auto">{{ settings.getPath({ game, folder: 'game', installIndex: -1 }) }}</span>
 				<UButton label="Select" class="w-max mr-0 ml-auto" @click="() => handleBaseDirPicker(game)" />
 				<template v-if="openStates[game]">
 					<div />
@@ -20,11 +20,11 @@
 					/>
 					<div />
 					<div />
-					<template v-for="(path, idx) in settings.additionalInstalls[game]" :key="path">
+					<template v-for="(install, idx) in settings.additionalInstalls[game]" :key="install.path">
 						<div />
-						<span>[TODO: Version]</span>
+						<UBadge :label="install.version" class="w-max ml-auto mr-0" color="secondary" variant="outline" :ui="{ base: 'rounded-2xl' }" />
 						<span class="my-auto">{{ settings.getPath({ game, folder: 'game', installIndex: idx }) }}</span>
-						<UButton color="warning" label="Remove" @click="() => settings.removeAdditionalInstall(path, game)" />
+						<UButton color="warning" label="Remove" @click="() => settings.removeAdditionalInstall(install.path, game)" />
 					</template>
 				</template>
 			</template>

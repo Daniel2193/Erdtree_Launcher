@@ -26,6 +26,18 @@ export const ModColorMap: Record<ModType, string> = {
 	UNKNOWN: '',
 } as const
 
+export const REGULATION_HASHES: Record<GameType, Record<string, string>> = {
+	er: {
+		'7b6d07c357b639c902d48403ffe3612db35e0cf8d6fcc82d3fb24ea6eb6cf30a': '1.16.1',
+		'PLACEHOLDER': '1.17.0',
+	},
+	ds3: {},
+	ds2: {},
+	dsr: {},
+	sekiro: {},
+	nr: {},
+}
+
 export const LAUNCH_MODE = {
 	NORMAL: 1,
 	BUILD_ONLY: 2,

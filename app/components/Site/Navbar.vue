@@ -14,18 +14,37 @@
 			<UBadge variant="subtle" class="mx-2">
 				v{{ version }}
 			</UBadge>
-			<USelect v-model="settings.currentGame" :items="items" size="lg" class="w-48" />
+			<USelect :items="items" size="lg" class="w-64" :model-value="currentValue" @update:model-value="handleSelection" />
 		</template>
 	</UHeader>
 </template>
 
 <script lang="ts" setup>
+import type { GameType, SelectItem } from '~/types/main.types'
 import { relaunch } from '@tauri-apps/plugin-process'
 import { check } from '@tauri-apps/plugin-updater'
 
 const settings = useSettingsStore()
 const routes = useRouter().getRoutes()
-const items = ref(Object.entries(GAME_LABELS).map(([game, label]) => ({ value: game, label })))
+const currentValue = computed(() => `${settings.currentGame}#${settings.currentInstallIndex}`)
+const items = computed<SelectItem[]>(() => {
+	const selectItems: SelectItem[] = []
+	for (const [game, label] of Object.entries(GAME_LABELS)) {
+		selectItems.push({ value: `${game}#-1`, label })
+		let counter = 0
+		for (const install of Object.values(settings.additionalInstalls[game as GameType])) {
+			selectItems.push({ value: `${game}#${counter}`, label: `${label} (${install.version})` })
+			counter++
+		}
+	}
+	return selectItems
+})
+
+function handleSelection(value: string) {
+	const [game, idx] = value.split('#')
+	settings.currentGame = game as GameType
+	settings.currentInstallIndex = Number.parseInt(idx ?? '-1')
+}
 
 const all = routes.sort((a, b) => (a.meta.position as number | undefined ?? -1) - (b.meta.position as number | undefined ?? -1)).map(r => ({ label: r.name as string, icon: r.meta.icon as string, to: r.path }))
 
