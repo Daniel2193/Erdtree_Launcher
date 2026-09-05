@@ -1,11 +1,9 @@
-import type { Toast } from '@nuxt/ui/runtime/composables/useToast.js'
 import type { GameType } from '~/types/main.types'
-import { invoke } from '@tauri-apps/api/core'
 import { defineStore } from 'pinia'
 
 type FolderType = 'base' | 'game' | 'launcherBase'
 
-type GetPathParams = { game?: GameType } & ({
+type GetPathParams = { game?: GameType, installIndex?: number } & ({
 	folder: FolderType
 	modpackId?: never
 } | {
@@ -23,6 +21,15 @@ export const useSettingsStore = defineStore('settings', () => {
 		dsr: '',
 		sekiro: '',
 		nr: '',
+	})
+
+	const additionalInstalls = ref<Record<GameType, { path: string, version: string }[]>>({
+		er: [],
+		ds3: [],
+		ds2: [],
+		dsr: [],
+		sekiro: [],
+		nr: [],
 	})
 
 	const modpackDirs = ref<Record<GameType, Record<string, string>>>({
@@ -45,6 +52,7 @@ export const useSettingsStore = defineStore('settings', () => {
 	const seamlessErReleaseFilename = ref('Seamless.Co-op.v1.9.3-510-1-9-3-1770764426.zip')
 
 	const currentGame = ref<GameType>('er')
+	const currentInstallIndex = ref(-1)
 
 	const test = ref('test')
 
@@ -54,19 +62,20 @@ export const useSettingsStore = defineStore('settings', () => {
 
 	function getPath(params: GetPathParams) {
 		const game = params.game ?? currentGame.value
+		const installIndex = params.installIndex ?? currentInstallIndex.value
 		if (params.modpackId) {
 			return modpackDirs.value[game][params.modpackId] ?? ''
 		}
 		else {
-			const basePath = baseDirs.value[game]
-			if (params.folder === 'base') {
+			const basePath = installIndex === -1 ? baseDirs.value[game] : additionalInstalls.value[game].at(installIndex)?.path ?? ''
+			if (params.folder === 'base' || (DIRECT_PATH_GAMES.has(game) && params.folder === 'game')) {
 				return basePath
 			}
 			else if (params.folder === 'game') {
-				return basePath ? `${basePath}${DIRECT_PATH_GAMES.has(game) ? '' : 'Game'}` : ''
+				return joinPath(basePath, 'Game')
 			}
 			else if (params.folder === 'launcherBase') {
-				return basePath ? `${basePath}ErdtreeLauncher` : ''
+				return joinPath(basePath, 'ErdtreeLauncher')
 			}
 		}
 		throw new Error('Invalid folder type')
@@ -76,6 +85,28 @@ export const useSettingsStore = defineStore('settings', () => {
 	}
 	function setModpackPath(path: string, game: GameType, modpackId: string) {
 		modpackDirs.value[game][modpackId] = path
+	}
+	async function addAdditionalInstall(path: string, game: GameType) {
+		if (additionalInstalls.value[game].some(i => i.path === path)) {
+			return
+		}
+		const normalizedPath = path.endsWith('\\') ? path : `${path}\\`
+		const newIdx = additionalInstalls.value[game].push({ path: normalizedPath, version: '...' }) - 1
+		const filepath = joinPath(normalizedPath, 'Game', 'regulation.bin')
+		console.log(filepath)
+		const hash = await getFileHash(filepath)
+		console.log(hash)
+		const version = REGULATION_HASHES[game][hash] ?? 'unknown'
+		additionalInstalls.value[game].at(newIdx)!.version = version
+	}
+	function removeAdditionalInstall(path: string, game: GameType) {
+		if (additionalInstalls.value[game].some(i => i.path === path)) {
+			additionalInstalls.value[game] = additionalInstalls.value[game].filter(p => p.path !== path)
+		}
+		else {
+			console.warn('Path', path, 'not found')
+		}
+		currentInstallIndex.value = -1
 	}
 	return {
 		seamlessReleaseFilename: seamlessErReleaseFilename,
@@ -87,6 +118,10 @@ export const useSettingsStore = defineStore('settings', () => {
 		test,
 		modpackDirs,
 		setModpackPath,
+		additionalInstalls,
+		addAdditionalInstall,
+		removeAdditionalInstall,
+		currentInstallIndex,
 	}
 })
 

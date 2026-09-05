@@ -1,4 +1,5 @@
 import type { GameType, ModLoaderType } from '~/types/main.types'
+import { invoke } from '@tauri-apps/api/core'
 import { exists } from '@tauri-apps/plugin-fs'
 import { useSettingsStore } from '../stores/settings.store'
 
@@ -62,4 +63,8 @@ export async function isMe2Installed(game?: GameType) {
 
 export async function isEmlInstalled() {
 	return false
+}
+
+export async function getFileHash(filepath: string) {
+	return await invoke<string>('file_hash', { filepath })
 }

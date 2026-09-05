@@ -70,6 +70,15 @@ pub async fn import_mod(
         .map_err(|e| e.to_string())?
 }
 
+#[tauri::command(rename_all = "snake_case")]
+pub fn file_hash(_app: AppHandle, filepath: String) -> Result<String, String>{
+	let path = Path::new(&filepath);
+	if !path.exists() {
+        return Err("File or directory does not exist".into());
+    }
+	return hash_file(path)
+}
+
 pub fn import_mod_logic(
     app: AppHandle,
     filepath: String,

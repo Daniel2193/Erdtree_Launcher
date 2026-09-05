@@ -1,6 +1,6 @@
 <template>
 	<UModal v-model:open="isOpen" :title="titleLabel">
-		<UButton :label="triggerLabel" />
+		<UButton :label="triggerLabel" size="xs" color="secondary" />
 		<template #body>
 			<div>
 				<div class="flex">

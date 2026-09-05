@@ -148,10 +148,12 @@ async function launchMe3({ launchMode, noProfile, profilePathOverride }: Me3Laun
 	const store = useActiveGameStore()
 	const profileFilename = store.value.selectedProfile?.id ?? 'default'
 	const settings = useSettingsStore()
+	const game = settings.currentGame
 	const launcherPath = settings.getPath({ folder: 'launcherBase' })
 	const profilePath = profilePathOverride ?? `${launcherPath}/ME3/profiles/${profileFilename}`
-	const profileArgs = noProfile ? `-g ${settings.currentGame}` : `-p "${profilePath}"`
-	const process = Command.create('powershell', ['-NoProfile', '-Command', `& "${launcherPath}${getModLoader(settings.currentGame, 'ME3').binPath}" launch ${profileArgs}`])
+	const profileArgs = noProfile ? `-g ${game}` : `-p "${profilePath}"`
+	const exeArgs = `-e "${settings.getPath({ game, folder: 'game' })}\\${EXE_FILENAME[game]}"`
+	const process = Command.create('powershell', ['-NoProfile', '-Command', `& "${launcherPath}${getModLoader(game, 'ME3').binPath}" launch ${profileArgs} ${exeArgs}`])
 	await process.execute()
 }
 

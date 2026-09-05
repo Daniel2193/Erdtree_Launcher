@@ -58,6 +58,7 @@ pub fn run() {
             commands::unzip,
             commands::import_mod,
 			commands::auto_locate_games,
+			commands::file_hash,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
