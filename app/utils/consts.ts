@@ -29,7 +29,7 @@ export const ModColorMap: Record<ModType, string> = {
 export const REGULATION_HASHES: Record<GameType, Record<string, string>> = {
 	er: {
 		'7b6d07c357b639c902d48403ffe3612db35e0cf8d6fcc82d3fb24ea6eb6cf30a': '1.16.1',
-		'PLACEHOLDER': '1.17.0',
+		'fb4afd25e70effc9f9523d3aba89b1fb3e08b0800d8efb9a535cab038c5e8bbd': '1.17.0',
 	},
 	ds3: {},
 	ds2: {},
