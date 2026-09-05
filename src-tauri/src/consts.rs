@@ -3,6 +3,8 @@ pub(crate) const PROTECTED_DIR_NAMES: [&'static str; 14] = [
     "parts", "script", "sd", "sfx",
 ];
 
+pub(crate) const PROTECTED_FILE_NAMES: [&str; 1] = ["ersc_settings.ini"];
+
 pub struct SteamAppIDs {
     pub(crate) er: u32,
     pub(crate) ds3: u32,

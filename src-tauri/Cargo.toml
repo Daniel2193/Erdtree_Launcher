@@ -1,7 +1,7 @@
 # cspell:disable
 [package]
 name = "ErdtreeLauncher"
-version = "2.4.0"
+version = "2.4.1"
 description = "FromSoft Mod Launcher / Manager"
 authors = [ "Daniel2193" ]
 license = "MIT"

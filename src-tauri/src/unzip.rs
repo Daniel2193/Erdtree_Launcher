@@ -1,4 +1,4 @@
-use crate::consts::PROTECTED_DIR_NAMES;
+use crate::consts::{PROTECTED_DIR_NAMES, PROTECTED_FILE_NAMES};
 use std::{
     collections::HashSet,
     fs::{self, File},
@@ -42,12 +42,12 @@ pub fn unzip_file(zip_path: &Path, output_dir: &Path) -> Result<(), Box<dyn std:
                 out_path = stripped.to_path_buf();
             }
         }
+		let final_path = output_dir.join(&out_path);
         if !zipped_file.is_dir() {
-            if is_protected_filename(&out_path.as_path()) {
+            if is_protected_filename(&out_path.as_path()) && final_path.exists() {
                 continue;
             }
         }
-        let final_path = output_dir.join(out_path);
         if zipped_file.is_dir() {
             fs::create_dir_all(&final_path)?;
         } else {
@@ -71,9 +71,9 @@ fn is_protected_root_dir_name(path: &Path) -> bool {
 }
 
 fn is_protected_filename(path: &Path) -> bool {
-    let protected_names = ["ersc_settings.ini"];
+    
     match path.file_name().and_then(|s| s.to_str()) {
-        Some(name) => protected_names.contains(&name),
+        Some(name) => PROTECTED_FILE_NAMES.contains(&name),
         None => false,
     }
 }
