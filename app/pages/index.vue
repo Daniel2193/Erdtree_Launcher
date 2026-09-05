@@ -30,7 +30,6 @@ definePageMeta({
 	position: 1,
 })
 
-const settings = useSettingsStore()
 const store = useActiveGameStore()
 const items = computed(() => profileToDropdownProfile(store.value.availableProfiles.filter(p => !p.hidden)))
 const { modpackStates } = useModpacks()
